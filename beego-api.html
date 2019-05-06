@@ -1,0 +1,129 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<div>
+    <button type="button" id="r1b">r1</button>
+</div>
+
+<div>
+    姓名：<input type="text" name="r2name">
+    密码：<input type="password" name="r2pwd">
+    <button type="button" id="r2b">请求user接口并插入上面的数据</button>
+</div>
+
+<div>
+    查询姓名：<input type="text" name="r3name">
+    <button type="button" id="r3b">根据姓名获取用户列表</button>
+</div>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('#r1b').on('click', function () {
+            new BeegoRequests().r1();
+        });
+        $('#r2b').on('click', function () {
+            new BeegoRequests().r2();
+        });
+        $('#r3b').on('click', function () {
+            new BeegoRequests().r3();
+        });
+    });
+
+    class Request {
+        constructor() {
+            this.DEFAULT = {
+                host: 'http://localhost:8080/v1',
+                url: '/',
+                type: 'POST',
+                data: ''
+            };
+        }
+
+        DEFAULT;
+
+        r(option = {}) {
+            const opt = Object.assign(this.DEFAULT, option);
+            return new Promise((resolve, reject) => {
+                let data = opt.data;
+                if (opt.type.toUpperCase() === 'POST')
+                    data = JSON.stringify(data);
+                console.log(data);
+                $.ajax({
+                    url: opt.host + opt.url,
+                    type: opt.type,
+                    data: data,
+                    success(res) {
+                        resolve(res);
+                    },
+                    error(err) {
+                        reject(err);
+                    }
+                });
+            });
+        }
+    }
+
+    class BeegoRequests extends Request {
+        constructor() {
+            super();
+        }
+
+        r1() {
+            this.r({
+                type: 'GET',
+                data: {
+                    a: 1
+                }
+            }).then(res => {
+                console.log(res);
+            });
+        }
+
+        r2() {
+            const name = $('input[name="r2name"]').val();
+            const pwd = $('input[name="r2pwd"]').val();
+            const data = [{ name: name, pwd: pwd }];
+
+            this.r({
+                url: '/user/add',
+                data: {
+                    user: data
+                }
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+
+            });
+        }
+
+        r3() {
+            const name = $('input[name="r3name"]').val();
+            this.r({
+                type: 'GET',
+                url: '/user/list',
+                data: {
+                    name: name
+                }
+            }).then(res => {
+                console.log(res);
+            }).catch(err => {
+
+            });
+        }
+    }
+
+</script>
+</body>
+</html>
