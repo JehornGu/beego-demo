@@ -1,0 +1,86 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "CIV API",
+        "description": "CIV APIs.",
+        "version": "1.0.0",
+        "contact": {
+            "email": "jehornguu@gmail.com"
+        }
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/user/add": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "description": "Add users",
+                "operationId": "UserController.AddUser",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "user",
+                        "description": "The user list for add",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserAddObj"
+                        }
+                    }
+                ]
+            }
+        },
+        "/user/list": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "description": "Get user list",
+                "operationId": "UserController.GetUserList",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "The filter key of Name",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "models.User": {
+            "title": "User",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Pwd": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserAddObj": {
+            "title": "UserAddObj",
+            "type": "object",
+            "properties": {
+                "User": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "user",
+            "description": "User APIs\n"
+        }
+    ]
+}
